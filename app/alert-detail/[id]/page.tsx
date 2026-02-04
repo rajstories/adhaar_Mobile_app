@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { useState } from "react"
 
+// Alert Detail Page - Fixed variable naming conflict (alertData vs global alert function)
+
 // Mock data for trend chart (last 6 months)
 const trendData = [
   { month: "Sep", value: 2340 },
