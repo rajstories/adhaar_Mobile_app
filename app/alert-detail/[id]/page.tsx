@@ -71,26 +71,26 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
   const router = useRouter()
   const [checkedActions, setCheckedActions] = useState<Record<number, boolean>>({})
   const [comment, setComment] = useState("")
-  
+
   const alertId = params.id
-  const alert = mockAlertDetails[alertId as keyof typeof mockAlertDetails] || mockAlertDetails["1"]
-  
+  const alertData = mockAlertDetails[alertId as keyof typeof mockAlertDetails] || mockAlertDetails["1"]
+
   const toggleAction = (index: number) => {
     setCheckedActions(prev => ({ ...prev, [index]: !prev[index] }))
   }
 
   const handleMarkResolved = () => {
-    alert("Alert marked as resolved. This will be logged in the system.")
+    window.alert("Alert marked as resolved. This will be logged in the system.")
     router.push("/")
   }
 
   const handleEscalate = () => {
-    alert("Alert escalated to State Officer. Notification sent.")
+    window.alert("Alert escalated to State Officer. Notification sent.")
     router.push("/")
   }
 
   const handleFalseAlert = () => {
-    alert("Marked as false alert. This will be reviewed by the system.")
+    window.alert("Marked as false alert. This will be reviewed by the system.")
     router.push("/")
   }
 
@@ -106,17 +106,16 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
             <ArrowLeft className="w-6 h-6" />
           </button>
           <div className="flex-1">
-            <h1 className="text-lg font-bold">{alert.district}</h1>
+            <h1 className="text-lg font-bold">{alertData.district}</h1>
             <p className="text-xs text-blue-100">Alert Details</p>
           </div>
           <span
-            className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide ${
-              alert.type === "critical"
-                ? "bg-red-100 text-red-800 border-2 border-red-300"
-                : "bg-yellow-100 text-yellow-800 border-2 border-yellow-300"
-            }`}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide ${alertData.type === "critical"
+              ? "bg-red-100 text-red-800 border-2 border-red-300"
+              : "bg-yellow-100 text-yellow-800 border-2 border-yellow-300"
+              }`}
           >
-            {alert.type}
+            {alertData.type}
           </span>
         </div>
       </header>
@@ -133,14 +132,14 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
             {/* Current Count */}
             <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-lg p-3">
               <p className="text-xs font-semibold text-red-800 mb-1">Current Count</p>
-              <p className="text-2xl font-bold text-red-700">{alert.currentCount.toLocaleString()}</p>
-              <p className="text-xs text-red-600 mt-1">{alert.metric}</p>
+              <p className="text-2xl font-bold text-red-700">{alertData.currentCount.toLocaleString()}</p>
+              <p className="text-xs text-red-600 mt-1">{alertData.metric}</p>
             </div>
-            
+
             {/* Baseline */}
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-lg p-3">
               <p className="text-xs font-semibold text-blue-800 mb-1">Baseline</p>
-              <p className="text-2xl font-bold text-blue-700">{alert.baselineCount.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-blue-700">{alertData.baselineCount.toLocaleString()}</p>
               <p className="text-xs text-blue-600 mt-1">Monthly Average</p>
             </div>
           </div>
@@ -149,18 +148,16 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
           <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-3 mb-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-gray-700">Deviation from Baseline</span>
-              <span className={`text-2xl font-bold ${
-                alert.type === "critical" ? "text-red-600" : "text-yellow-600"
-              }`}>
-                -{alert.deviation}%
+              <span className={`text-2xl font-bold ${alertData.type === "critical" ? "text-red-600" : "text-yellow-600"
+                }`}>
+                -{alertData.deviation}%
               </span>
             </div>
             <div className="mt-2 bg-gray-200 rounded-full h-2 overflow-hidden">
-              <div 
-                className={`h-full rounded-full ${
-                  alert.type === "critical" ? "bg-red-600" : "bg-yellow-600"
-                }`}
-                style={{ width: `${alert.deviation}%` }}
+              <div
+                className={`h-full rounded-full ${alertData.type === "critical" ? "bg-red-600" : "bg-yellow-600"
+                  }`}
+                style={{ width: `${alertData.deviation}%` }}
               />
             </div>
           </div>
@@ -171,16 +168,16 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis 
-                  dataKey="month" 
+                <XAxis
+                  dataKey="month"
                   tick={{ fontSize: 12, fill: "#6b7280" }}
                   stroke="#9ca3af"
                 />
-                <YAxis 
+                <YAxis
                   tick={{ fontSize: 12, fill: "#6b7280" }}
                   stroke="#9ca3af"
                 />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: "#fff",
                     border: "2px solid #e5e7eb",
@@ -188,9 +185,9 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
                     fontSize: "12px"
                   }}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
+                <Line
+                  type="monotone"
+                  dataKey="value"
                   stroke="#0B5ED7"
                   strokeWidth={3}
                   dot={{ fill: "#0B5ED7", r: 4 }}
@@ -215,7 +212,7 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
                   <span className="text-gray-600">{group.count} ({group.percentage}%)</span>
                 </div>
                 <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-blue-600 rounded-full transition-all duration-500"
                     style={{ width: `${group.percentage}%` }}
                   />
@@ -233,7 +230,7 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
           </h2>
           <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
             <ul className="space-y-3">
-              {alert.probableCauses.map((cause, index) => (
+              {alertData.probableCauses.map((cause, index) => (
                 <li key={index} className="flex gap-2 text-sm text-gray-700">
                   <span className="text-orange-600 font-bold mt-0.5">•</span>
                   <span>{cause}</span>
@@ -250,7 +247,7 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
             Recommended Actions
           </h2>
           <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 space-y-3">
-            {alert.recommendedActions.map((action, index) => (
+            {alertData.recommendedActions.map((action, index) => (
               <label
                 key={index}
                 className="flex items-start gap-3 cursor-pointer group"
@@ -261,11 +258,10 @@ export default function AlertDetailPage({ params }: { params: { id: string } }) 
                   onChange={() => toggleAction(index)}
                   className="mt-0.5 w-5 h-5 rounded border-2 border-green-400 text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 cursor-pointer"
                 />
-                <span className={`text-sm flex-1 transition-all ${
-                  checkedActions[index] 
-                    ? "line-through text-gray-500" 
-                    : "text-gray-700 group-hover:text-gray-900"
-                }`}>
+                <span className={`text-sm flex-1 transition-all ${checkedActions[index]
+                  ? "line-through text-gray-500"
+                  : "text-gray-700 group-hover:text-gray-900"
+                  }`}>
                   {action}
                 </span>
               </label>
